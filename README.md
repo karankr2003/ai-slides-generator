@@ -36,7 +36,7 @@ An AI-powered chat application that generates and edits PowerPoint presentations
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/karankr2003/ai-slides-generator.git>
 cd ai-slides
 ```
 
