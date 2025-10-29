@@ -114,7 +114,4 @@ ai-slides/
 - Direct text editing in the preview is handled locally, while prompt-based edits make a new call to the AI.
 - PDF generation is handled by converting the slide content to HTML and then using Puppeteer to create a PDF.
 
-## License
-
-This project is licensed under the MIT License.
 
