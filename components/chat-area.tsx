@@ -16,15 +16,11 @@ export function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("gemini-2.0-flash")
-  const [showModelDropdown, setShowModelDropdown] = useState(false)
   const [copiedMessages, setCopiedMessages] = useState<Set<string>>(new Set())
   const [chatHistory, setChatHistory] = useState<{id: string, title: string, messages: Message[], timestamp: number}[]>([])
   const [currentChatId, setCurrentChatId] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const models = ["gemini-2.0-flash", "gemini-2.0-pro", "gemini-1.5-pro", "gemini-1.5-flash"]
 
   // Initialize with welcome message on component mount
   useEffect(() => {
@@ -64,14 +60,13 @@ export function ChatArea() {
 
     try {
       const geminiService = getGeminiService()
+      const response = await geminiService.generateChatResponse(currentInput)
       
-        const response = await geminiService.generateChatResponse(currentInput)
-        
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          type: "assistant",
-          content: response,
-        }
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "assistant",
+        content: response,
+      }
         
         setMessages((prev) => [...prev, assistantMessage])
     } catch (error) {
@@ -190,43 +185,8 @@ Once configured, the AI chat will work perfectly!`
 
   return (
     <div className="flex-1 flex flex-col bg-background overflow-hidden">
-      {/* Header with Model Selector and New Chat */}
-      <div className="p-4 border-b border-border flex items-center justify-between">
-        <div className="relative">
-          <button
-            onClick={() => setShowModelDropdown(!showModelDropdown)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
-            suppressHydrationWarning
-          >
-            <div className="w-5 h-5 rounded bg-blue-500 flex items-center justify-center text-white text-xs font-bold">
-              G
-            </div>
-            <span className="text-sm font-medium text-foreground">{selectedModel}</span>
-            <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </button>
-
-          {showModelDropdown && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-10">
-              {models.map((model) => (
-                <button
-                  key={model}
-                  onClick={() => {
-                    setSelectedModel(model)
-                    setShowModelDropdown(false)
-                  }}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${
-                    selectedModel === model ? "bg-muted font-semibold" : ""
-                  }`}
-                  suppressHydrationWarning
-                >
-                  {model}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+      {/* Header with New Chat Button */}
+      <div className="p-4 border-b border-border flex items-center justify-end">
 
         <div className="flex items-center gap-2">
           <Button 

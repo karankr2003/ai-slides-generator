@@ -14,9 +14,11 @@ export function Templates() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Templates</h1>
-        <p className="text-muted-foreground mb-6">Choose a template to get started</p>
+      <div className="p-4 sm:p-6">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Templates</h1>
+          <p className="text-muted-foreground">Choose a template to get started</p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {templates.map((template) => (
             <div

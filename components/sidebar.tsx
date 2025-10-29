@@ -1,18 +1,46 @@
 "use client"
 
-import { LayoutGrid, FileText, MessageSquare, Sparkles } from "lucide-react"
+import { LayoutGrid, FileText, MessageSquare, Sparkles, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { useState, useEffect } from "react"
 
 export function Sidebar() {
   const pathname = usePathname()
+  const isMobile = useIsMobile()
+  const [isOpen, setIsOpen] = useState(!isMobile)
   const initials = "A"
 
+  // Close sidebar when route changes on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false)
+    }
+  }, [pathname, isMobile])
+
+  // Toggle sidebar visibility
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // Don't render the sidebar on mobile when closed
+  if (!isOpen && isMobile) {
+    return (
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-50 p-2 rounded-md bg-sidebar text-sidebar-foreground md:hidden"
+      >
+        <Menu size={24} />
+      </button>
+    )
+  }
+
   return (
-    <div className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
+    <div className={`fixed md:relative inset-y-0 left-0 z-40 w-64 bg-sidebar border-r border-sidebar-border flex flex-col transition-transform duration-300 ease-in-out ${isMobile ? 'translate-x-0' : ''}`}>
       {/* Header */}
-      <div className="p-4 border-b border-sidebar-border">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="p-4 border-b border-sidebar-border flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-sidebar-primary flex items-center justify-center text-sidebar-primary-foreground font-bold text-sm">
             {initials}
           </div>
@@ -21,8 +49,14 @@ export function Sidebar() {
             <div className="text-xs text-sidebar-accent-foreground">Guest</div>
           </div>
         </div>
-
-              </div>
+        <button 
+          onClick={toggleSidebar}
+          className="md:hidden text-sidebar-foreground hover:bg-sidebar-accent/50 p-1 rounded"
+          aria-label="Close sidebar"
+        >
+          <X size={20} />
+        </button>
+      </div>
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-2">
